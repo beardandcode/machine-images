@@ -1,0 +1,58 @@
+{
+  "variables": {
+    "fusion_path": "{{env `FUSION_PATH`}}"
+  },
+  "builders": [
+    {
+      "type": "vmware-iso",
+
+      "fusion_app_path": "{{user `fusion_path`}}",
+
+      "iso_url": "http://wiki.alpinelinux.org/cgi-bin/dl.cgi/v3.2/releases/x86_64/alpine-3.2.3-x86_64.iso",
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "57f6faf5e065e4063cb8bf61b42566d89e50e81f0ff850f1aa33a7558194a316",
+
+      "vm_name": "alpine-3.2.3",
+      "disk_size": 2048,
+
+      "tools_upload_flavor": "linux",
+      "http_directory": "http",
+
+      "boot_wait": "30s",
+      "boot_command": [
+         "root<enter><wait>",
+	 "ifconfig eth0 up && udhcpc -i eth0<enter><wait5>",
+         "wget http://{{ .HTTPIP }}:{{ .HTTPPort }}/answers<enter><wait>",
+         "setup-alpine -f answers<enter><wait10>",
+         "vagrant<enter><wait>",
+         "vagrant<enter><wait10>",
+         "y<enter>",
+         "<wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10><wait10>",
+         "/etc/init.d/sshd stop<enter><wait>",
+         "reboot<enter>"
+      ],
+
+      "ssh_port": 22,
+      "ssh_username": "root",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "100s",
+
+      "shutdown_command": "/sbin/poweroff"
+    }
+  ],
+  "provisioners": [
+    {
+      "execute_command": "/bin/sh '{{.Path}}'",
+      "scripts": [
+        "scripts/setup.sh"
+      ],
+      "type": "shell"
+    }
+  ],
+  "post-processors": [
+    {
+      "output": "alpine-3.2.3.box",
+      "type": "vagrant"
+    }
+  ]
+}
