@@ -12,7 +12,7 @@
       "iso_checksum_type": "sha256",
       "iso_checksum": "57f6faf5e065e4063cb8bf61b42566d89e50e81f0ff850f1aa33a7558194a316",
 
-      "vm_name": "alpine-3.2.3",
+      "vm_name": "alpine",
       "disk_size": 2048,
 
       "tools_upload_flavor": "linux",
@@ -51,8 +51,18 @@
   ],
   "post-processors": [
     {
-      "output": "alpine-3.2.3.box",
+      "output": "alpine.box",
+      "keep_input_artifact": false,
       "type": "vagrant"
+    },
+    {
+      "type": "atlas",
+      "artifact": "beardandcode/devel-alpine",
+      "artifact_type": "vagrant.box",
+      "metadata": {
+        "provider": "vmware_desktop",
+        "version": "0.0.1"
+      }
     }
   ]
 }
